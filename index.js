@@ -11,7 +11,7 @@ async function Get_Weather_API() {
   const response = await data.json();
   console.log(response);
    if (!data.ok) {
-    let card = `<br><h3>Error : Sorry City Not Found</h3>`;
+    let card = `<br><h3>Error : Sorry City Not Found. Try Again....!</h3>`;
     const pallet = document.createElement("div");
     pallet.innerHTML = card;
     pallet.classList.add("pallet");
@@ -19,8 +19,6 @@ async function Get_Weather_API() {
   X_btn.innerText = "X";
   X_btn.classList.add("Cross_btn");
   X_btn.addEventListener("click", () => {
-    saved = saved.filter((item) => item.City_name === ALL_DATA.City_name);
-    localStorage.setItem("Weather_Data", JSON.stringify(saved));
     Display_Weather.removeChild(pallet);
   });
   pallet.appendChild(X_btn);
@@ -45,13 +43,13 @@ async function Get_Weather_API() {
   X_btn.innerText = "X";
   X_btn.classList.add("Cross_btn");
   X_btn.addEventListener("click", () => {
-    saved = saved.filter((item) => item.City_name === ALL_DATA.City_name);
+    saved = saved.filter((item) => item.City_name !== ALL_DATA.City_name);
     localStorage.setItem("Weather_Data", JSON.stringify(saved));
     Display_Weather.removeChild(pallet);
   });
   pallet.innerHTML = card;
   pallet.appendChild(X_btn);
-  if (!saved.filter((item) => item.City_name === ALL_DATA.City_name)) {
+  if (!saved.some((item) => item.City_name !== ALL_DATA.City_name)) {
     saved.push(ALL_DATA);
     localStorage.setItem("Weather_Data", JSON.stringify(saved));
   }
