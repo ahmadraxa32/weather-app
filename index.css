@@ -2,13 +2,37 @@
   margin: 0%;
   padding: 0%;
 }
+body{
+    display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.Vedio_Background {
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  min-width: 100%;
+  min-height: 100%;
+  object-fit: cover;
+  z-index: -1; /* Keeps video behind content */
+}
+
 .container {
   display: flex;
-  justify-content: center;
   flex-direction: column;
   align-items: center;
   padding: 30px;
   margin: 20px;
+  box-shadow: 2px 2px 12px black;
+  border-radius: 16px;
+  width: 450px;
+  height: 400px;
+  background: rgba(255, 255, 255, 0.2); 
+  backdrop-filter: blur(8px); 
+  color: white;  top: 0;
+  z-index: 1;
+  position: relative;
 }
 .container h1 {
   font-size: 50px;
@@ -18,10 +42,10 @@ body .input {
   width: 240px;
   font-size: 18px;
   padding: 3px;
+  border-radius: 9px;
 }
 .container .btn {
-  height: 25px;
-  height: 35px;
+  height: 40px;
   color: white;
   background-color: blue;
   border-radius: 8px;
