@@ -1,0 +1,216 @@
+--------------HTML----------------
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather Api</title>
+    <link rel="stylesheet" href="index.css">
+</head>
+<body>
+        <video autoplay muted loop class="Vedio_Background">
+        <source src="weather-app-backgroud.jpeg">
+        </video>
+    <div class="container">
+    <h1>Weather App</h1>
+    <span>
+    <input type="text" placeholder="Enter City name" class="input">
+    <button class="btn">Search</button></span>
+    <div class="Display_Weather">
+    </div>
+    </div>
+
+    </video>
+    <script src="index.js"></script>
+</body>
+</html>
+--------------------------css-------------------------
+* {
+  margin: 0%;
+  padding: 0%;
+}
+body{
+    display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.Vedio_Background {
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  min-width: 100%;
+  min-height: 100%;
+  object-fit: cover;
+  z-index: -1; /* Keeps video behind content */
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 30px;
+  margin: 20px;
+  box-shadow: 2px 2px 12px black;
+  border-radius: 16px;
+  width: 450px;
+  height: 400px;
+  background: rgba(255, 255, 255, 0.2); 
+  backdrop-filter: blur(8px); 
+  color: white;  top: 0;
+  z-index: 1;
+  position: relative;
+}
+.container h1 {
+  font-size: 50px;
+}
+body .input {
+  height: 25px;
+  width: 240px;
+  font-size: 18px;
+  padding: 3px;
+  border-radius: 9px;
+}
+.container .btn {
+  height: 40px;
+  color: white;
+  background-color: blue;
+  border-radius: 8px;
+  padding: 4px;
+  font-size: 20px;
+  border: none;
+  width: 86px;
+  cursor: pointer;
+}
+.pallet {
+  padding: 30px;
+  font-size: 20px;
+background: #020024;
+background: linear-gradient(90deg, rgba(2, 0, 36, 1) 0%, rgba(9, 9, 121, 1) 35%, rgba(0, 212, 255, 1) 100%);
+  color: white;
+  margin: 15px;
+  border-radius: 12px;
+  height: 200px;
+  width: 250px;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  position: relative;
+}
+.Cross_btn{
+    cursor: pointer;
+    color: black;
+    background-color: white;
+    padding: 3px;
+    height: 24px;
+    width: 66px;
+    border: none;
+    border-radius: 4px;
+    position: absolute;
+    right: 8%;
+}
+.Display_Weather{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+@media (max-width: 320px) {
+    .container h1{
+        font-size: 40px;
+    }
+    .container{
+        padding: 0;
+        margin: 0%;
+    }
+    .container .input{
+        width: 200px;
+    }
+}
+-------------------------JS------------------------------------
+const input = document.querySelector(".input");
+const btn = document.querySelector(".btn");
+const Display_Weather = document.querySelector(".Display_Weather");
+const Api_key = "282d9e34e7995ca26d42d209760fddb0";
+
+let saved = JSON.parse(localStorage.getItem("Weather_Data")) || [];
+
+async function Get_Weather_API() {
+  const city = input.value.trim();
+  if (!city) return;
+
+  const data = await fetch(
+    `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${Api_key}`
+  );
+  const response = await data.json();
+  console.log(response);
+
+  if (!data.ok) {
+    let card = `<br><h3>Error : Sorry City Not Found. Try Again....!</h3>`;
+    const pallet = document.createElement("div");
+    pallet.innerHTML = card;
+    pallet.classList.add("pallet");
+
+    const X_btn = document.createElement("button");
+    X_btn.innerText = "X";
+    X_btn.classList.add("Cross_btn");
+    X_btn.addEventListener("click", () => {
+      Display_Weather.removeChild(pallet);
+    });
+
+    pallet.appendChild(X_btn);
+    Display_Weather.appendChild(pallet);
+    reset();
+    return;
+  }
+
+  const ALL_DATA = {
+    City_name: response.name,
+    humidity: response.main.humidity,
+    temp: response.main.temp,
+    weather_description: response.weather[0].description,
+  };
+
+  const pallet = document.createElement("div");
+  pallet.classList.add("pallet");
+
+  let card = `
+    <h3>City : ${ALL_DATA.City_name}</h3>
+    <h3>Humidity : ${ALL_DATA.humidity}%</h3>
+    <h3>Weather : ${ALL_DATA.weather_description}</h3>
+    <h3>Temperature : ${(ALL_DATA.temp - 273.15).toFixed(1)}°C</h3>
+  `;
+
+  pallet.innerHTML = card;
+
+  const X_btn = document.createElement("button");
+  X_btn.innerText = "X";
+  X_btn.classList.add("Cross_btn");
+  X_btn.addEventListener("click", () => {
+    saved = saved.filter((item) => item.City_name !== ALL_DATA.City_name);
+    localStorage.setItem("Weather_Data", JSON.stringify(saved));
+    Display_Weather.removeChild(pallet);
+  });
+
+  pallet.appendChild(X_btn);
+  Display_Weather.appendChild(pallet);
+
+  if (!saved.some(item => item.City_name === ALL_DATA.City_name)) {
+    saved.push(ALL_DATA);
+    localStorage.setItem("Weather_Data", JSON.stringify(saved));
+  }
+
+  reset();
+}
+
+btn.addEventListener("click", Get_Weather_API);
+
+function reset() {
+  input.value = "";
+}
+
+input.addEventListener("keydown", (event) => {
+  if (event.key === "Enter") {
+    Get_Weather_API();
+  }
+});
