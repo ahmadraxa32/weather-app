@@ -7,6 +7,7 @@ body{
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  justify-content: center;
 }
 .Vedio_Background {
   position: fixed;
@@ -26,8 +27,9 @@ body{
   margin: 20px;
   box-shadow: 2px 2px 12px black;
   border-radius: 16px;
-  width: 450px;
-  height: 400px;
+  min-width: 450px;
+  min-height: 400px;
+  height: auto;
   background: rgba(255, 255, 255, 0.2); 
   backdrop-filter: blur(8px); 
   color: white;  top: 0;
@@ -99,5 +101,8 @@ background: linear-gradient(90deg, rgba(2, 0, 36, 1) 0%, rgba(9, 9, 121, 1) 35%,
     }
     .container .input{
         width: 180px;
+    }
+    .pallet{
+      width: 200px;
     }
 }
