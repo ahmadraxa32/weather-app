@@ -84,6 +84,7 @@ background: linear-gradient(90deg, rgba(2, 0, 36, 1) 0%, rgba(9, 9, 121, 1) 35%,
     border-radius: 4px;
     position: absolute;
     right: 8%;
+    top: 10px;
 }
 .Display_Weather{
     display: flex;
@@ -97,7 +98,9 @@ background: linear-gradient(90deg, rgba(2, 0, 36, 1) 0%, rgba(9, 9, 121, 1) 35%,
     .container{
      padding: 4px;
         margin: 17px;
-        width: 290px;
+        min-width: 290px;
+        min-height: 300px;
+        
     }
     .container .input{
         width: 180px;
