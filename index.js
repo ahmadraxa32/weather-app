@@ -69,7 +69,6 @@ async function Get_Weather_API() {
     saved.push(ALL_DATA);
     localStorage.setItem("Weather_Data", JSON.stringify(saved));
   }
-
   reset();
 }
 
@@ -84,3 +83,32 @@ input.addEventListener("keydown", (event) => {
     Get_Weather_API();
   }
 });
+document.addEventListener("DOMContentLoaded",()=>{
+  let saved = JSON.parse(localStorage.getItem("Weather_Data")) || [];
+saved.forEach(e => {
+ const pallet = document.createElement("div");
+  pallet.classList.add("pallet");
+
+  let card = `
+    <h3>City : ${e.City_name}</h3>
+    <h3>Humidity : ${e.humidity}%</h3>
+    <h3>Weather : ${e.weather_description}</h3>
+    <h3>Temperature : ${(e.temp - 273.15).toFixed(1)}°C</h3>
+  `;
+
+  pallet.innerHTML = card;
+
+  const X_btn = document.createElement("button");
+  X_btn.innerText = "X";
+  X_btn.classList.add("Cross_btn");
+  X_btn.addEventListener("click", () => {
+    saved = saved.filter((item) => item.City_name !== e.City_name);
+    localStorage.setItem("Weather_Data", JSON.stringify(saved));
+    Display_Weather.removeChild(pallet);
+  });
+
+  pallet.appendChild(X_btn);
+  Display_Weather.appendChild(pallet);
+
+});
+})
